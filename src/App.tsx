@@ -1,2 +1,30 @@
-import React, { useState } from 'react'; import './App.css'; interface Todo { id: number; title: string; done: boolean; }const App: React.FC = () => { const [todos, setTodos] = useState<Todo[]>([]); const [newTitle, setNewTitle] = useState(''); const handleAddTodo = () => { if (newTitle.trim() !== '') { const newTodo: Todo = { id: Math.random(), title: newTitle, done: false }; setTodos([...todos, newTodo]); setNewTitle(''); } }; const handleToggleDone = (id: number) => { setTodos(todos.map((todo) => todo.id === id ? { ...todo, done: !todo.done } : todo)); }; const handleRemoveTodo = (id: number) => { setTodos(todos.filter((todo) => todo.id !== id)); }; return (<div><h1>Todo App < /h1><input type="text" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="Add new todo"/ > <button onClick={ handleAddTodo }> Add < /button><ul>{todos.map((todo) => (<li key={todo.id}>{todo.title}<input type="checkbox" checked={todo.done} onChange={() => handleToggleDone(todo.id)} / > <button onClick={ () => handleRemoveTodo(todo.id) }> Remove < /button></li >)) }</ul></div >);}; export default App;
-h
+// TodoItem.tsx
+import React from 'react';
+
+interface Todo {
+  id: string;
+  title: string;
+  done: boolean;
+}
+
+interface TodoItemProps {
+  todo: Todo;
+  onToggleDone: (id: string) => void;
+  onRemove: (id: string) => void;
+}
+
+const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggleDone, onRemove }) => {
+  return (
+    <li>
+      {todo.title}
+      <input
+        type="checkbox"
+        checked={todo.done}
+        onChange={() => onToggleDone(todo.id)}
+      />
+      <button onClick={() => onRemove(todo.id)}>Remove</button>
+    </li>
+  );
+};
+
+export default TodoItem;
