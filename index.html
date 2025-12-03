@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #game-container {
+            width: 400px;
+            height: 400px;
+            border: 1px solid black;
+            margin: 40px auto;
+        }
+        #score {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Game</h1>
+    <div id="game-container"></div>
+    <p id="score">Score: 0</p>
+    <button id="start-button">Start Game</button>
+    <script>
+        let score = 0;
+        let intervalId;
+        const gameContainer = document.getElementById('game-container');
+        const scoreElement = document.getElementById('score');
+        const startButton = document.getElementById('start-button');
+        
+        startButton.addEventListener('click', startGame);
+        
+        function startGame() {
+            score = 0;
+            scoreElement.textContent = `Score: ${score}`;
+            intervalId = setInterval(() => {
+                const randomNumber = Math.floor(Math.random() * 100);
+                const circle = document.createElement('div');
+                circle.style.position = 'absolute';
+                circle.style.top = `${Math.floor(Math.random() * 400)}px`;
+                circle.style.left = `${Math.floor(Math.random() * 400)}px`;
+                circle.style.width = '20px';
+                circle.style.height = '20px';
+                circle.style.borderRadius = '50%';
+                circle.style.background = 'red';
+                circle.style.cursor = 'pointer';
+                circle.addEventListener('click', () => {
+                    score++;
+                    scoreElement.textContent = `Score: ${score}`;
+                    circle.remove();
+                });
+                gameContainer.appendChild(circle);
+            }, 1000);
+            startButton.disabled = true;
+        }
+        
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                clearInterval(intervalId);
+                startButton.disabled = false;
+                gameContainer.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>
