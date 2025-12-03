@@ -1,3 +1,62 @@
-// gameo.html
-// Created with Axion Studio
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rock, Paper, Scissors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #result {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rock, Paper, Scissors</h1>
+    <button id="rock">Rock</button>
+    <button id="paper">Paper</button>
+    <button id="scissors">Scissors</button>
+    <div id="result"></div>
 
+    <script>
+        const rockButton = document.getElementById('rock');
+        const paperButton = document.getElementById('paper');
+        const scissorsButton = document.getElementById('scissors');
+        const resultDiv = document.getElementById('result');
+
+        let computerChoice = '';
+        let userChoice = '';
+
+        rockButton.addEventListener('click', () => {
+            userChoice = 'rock';
+            playGame();
+        });
+        paperButton.addEventListener('click', () => {
+            userChoice = 'paper';
+            playGame();
+        });
+        scissorsButton.addEventListener('click', () => {
+            userChoice = 'scissors';
+            playGame();
+        });
+
+        function playGame() {
+            const choices = ['rock', 'paper', 'scissors'];
+            computerChoice = choices[Math.floor(Math.random() * choices.length)];
+
+            if (userChoice === computerChoice) {
+                resultDiv.innerText = `It's a tie! Both chose ${userChoice}.`;
+            } else if ((userChoice === 'rock' && computerChoice === 'scissors') ||
+                       (userChoice === 'paper' && computerChoice === 'rock') ||
+                       (userChoice === 'scissors' && computerChoice === 'paper')) {
+                resultDiv.innerText = `You win! ${userChoice} beats ${computerChoice}.`;
+            } else {
+                resultDiv.innerText = `You lose! ${computerChoice} beats ${userChoice}.`;
+            }
+        }
+    </script>
+</body>
+</html>
