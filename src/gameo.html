@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rock, Paper, Scissors</title>
+  <title>Tic Tac Toe</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -15,6 +15,24 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+    #game-board {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .cell {
+      width: 80px;
+      height: 80px;
+      font-size: 36px;
+      font-weight: bold;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .cell:hover {
+      background-color: #ccc;
+    }
     #result {
       font-size: 24px;
       font-weight: bold;
@@ -24,51 +42,81 @@
 </head>
 <body>
   <div id="game-container">
-    <h1>Rock, Paper, Scissors</h1>
-    <button id="rock-btn">Rock</button>
-    <button id="paper-btn">Paper</button>
-    <button id="scissors-btn">Scissors</button>
+    <h1>Tic Tac Toe</h1>
+    <div id="game-board">
+      <div class="cell" id="cell-1"></div>
+      <div class="cell" id="cell-2"></div>
+      <div class="cell" id="cell-3"></div>
+      <div class="cell" id="cell-4"></div>
+      <div class="cell" id="cell-5"></div>
+      <div class="cell" id="cell-6"></div>
+      <div class="cell" id="cell-7"></div>
+      <div class="cell" id="cell-8"></div>
+      <div class="cell" id="cell-9"></div>
+    </div>
     <p id="result"></p>
+    <button id="reset-btn">Reset Game</button>
   </div>
 
   <script>
-    const rockBtn = document.getElementById('rock-btn');
-    const paperBtn = document.getElementById('paper-btn');
-    const scissorsBtn = document.getElementById('scissors-btn');
+    let currentPlayer = 'X';
+    let gameBoard = ['', '', '', '', '', '', '', '', ''];
+    let gameOver = false;
+
+    const cells = document.querySelectorAll('.cell');
     const resultDiv = document.getElementById('result');
+    const resetBtn = document.getElementById('reset-btn');
 
-    let computerChoice = '';
-    let userChoice = '';
+    cells.forEach((cell, index) => {
+      cell.addEventListener('click', () => {
+        if (gameOver) return;
+        if (gameBoard[index] !== '') return;
 
-    rockBtn.addEventListener('click', () => {
-      userChoice = 'rock';
-      playGame();
+        gameBoard[index] = currentPlayer;
+        cell.textContent = currentPlayer;
+
+        checkForWinner();
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      });
     });
 
-    paperBtn.addEventListener('click', () => {
-      userChoice = 'paper';
-      playGame();
+    resetBtn.addEventListener('click', () => {
+      currentPlayer = 'X';
+      gameBoard = ['', '', '', '', '', '', '', '', ''];
+      gameOver = false;
+      cells.forEach((cell) => {
+        cell.textContent = '';
+      });
+      resultDiv.textContent = '';
     });
 
-    scissorsBtn.addEventListener('click', () => {
-      userChoice = 'scissors';
-      playGame();
-    });
+    function checkForWinner() {
+      const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
 
-    function playGame() {
-      const choices = ['rock', 'paper', 'scissors'];
-      computerChoice = choices[Math.floor(Math.random() * choices.length)];
+      for (let combination of winningCombinations) {
+        if (
+          gameBoard[combination[0]] === gameBoard[combination[1]] &&
+          gameBoard[combination[1]] === gameBoard[combination[2]] &&
+          gameBoard[combination[0]] !== ''
+        ) {
+          resultDiv.textContent = `Player ${gameBoard[combination[0]]} wins!`;
+          gameOver = true;
+          return;
+        }
+      }
 
-      if (userChoice === computerChoice) {
+      if (!gameBoard.includes('')) {
         resultDiv.textContent = 'It\'s a tie!';
-      } else if (
-        (userChoice === 'rock' && computerChoice === 'scissors') ||
-        (userChoice === 'scissors' && computerChoice === 'paper') ||
-        (userChoice === 'paper' && computerChoice === 'rock')
-      ) {
-        resultDiv.textContent = `You win! Computer chose ${computerChoice}.`;
-      } else {
-        resultDiv.textContent = `You lose! Computer chose ${computerChoice}.`;
+        gameOver = true;
       }
     }
   </script>
