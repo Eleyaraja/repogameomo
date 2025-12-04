@@ -1,90 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Rock, Paper, Scissors</title>
-</head>
-<body style="font-family: Arial, sans-serif; text-align: center; background-color: #f0f0f0; background-image: linear-gradient(to bottom, #f7f7f7, #e7e7e7); height: 100vh; margin: 0;">
-    <h1 style="color: #3498db; margin-top: 50px; font-size: 48px; font-weight: bold; text-shadow: 2px 2px 5px #ccc; animation: fadeIn 2s;">Rock, Paper, Scissors</h1>
-    <div style="display: flex; justify-content: space-around; margin-top: 50px;">
-        <button id="rock" style="width: 150px; height: 150px; font-size: 24px; background-color: #4CAF50; color: #fff; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0px 0px 10px rgba(0,0,0,0.2); animation: pulse 2s infinite; transition: transform 0.2s ease-in-out;"><i class="fas fa-hand-rock" style="font-size: 48px; margin-bottom: 10px;"></i>Rock</button>
-        <button id="paper" style="width: 150px; height: 150px; font-size: 24px; background-color: #ff9800; color: #fff; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0px 0px 10px rgba(0,0,0,0.2); animation: pulse 2s infinite; transition: transform 0.2s ease-in-out;"><i class="fas fa-hand-paper" style="font-size: 48px; margin-bottom: 10px;"></i>Paper</button>
-        <button id="scissors" style="width: 150px; height: 150px; font-size: 24px; background-color: #e74c3c; color: #fff; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0px 0px 10px rgba(0,0,0,0.2); animation: pulse 2s infinite; transition: transform 0.2s ease-in-out;"><i class="fas fa-hand-scissors" style="font-size: 48px; margin-bottom: 10px;"></i>Scissors</button>
-    </div>
-    <div id="result" style="font-size: 36px; font-weight: bold; margin-top: 50px; color: #666; text-shadow: 2px 2px 5px #ccc; animation: fadeIn 2s;"></div>
+# XOX Game in Python
 
-    <script>
-        const rockButton = document.getElementById('rock');
-        const paperButton = document.getElementById('paper');
-        const scissorsButton = document.getElementById('scissors');
-        const resultDiv = document.getElementById('result');
+# Initialize the game board
+board = [' ' for _ in range(9)]
 
-        let computerChoice = '';
-        let userChoice = '';
+def print_board():
+    row1 = '| {} | {} | {} |'.format(board[0], board[1], board[2])
+    row2 = '| {} | {} | {} |'.format(board[3], board[4], board[5])
+    row3 = '| {} | {} | {} |'.format(board[6], board[7], board[8])
 
-        rockButton.addEventListener('click', () => {
-            userChoice = 'rock';
-            playGame();
-            rockButton.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                rockButton.style.transform = 'scale(1)';
-            }, 200);
-        });
-        paperButton.addEventListener('click', () => {
-            userChoice = 'paper';
-            playGame();
-            paperButton.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                paperButton.style.transform = 'scale(1)';
-            }, 200);
-        });
-        scissorsButton.addEventListener('click', () => {
-            userChoice = 'scissors';
-            playGame();
-            scissorsButton.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                scissorsButton.style.transform = 'scale(1)';
-            }, 200);
-        });
+    print()
+    print(row1)
+    print(row2)
+    print(row3)
+    print()
 
-        function playGame() {
-            const choices = ['rock', 'paper', 'scissors'];
-            computerChoice = choices[Math.floor(Math.random() * choices.length)];
+def check_win():
+    win_conditions = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]
+    for condition in win_conditions:
+        if board[condition[0]] == board[condition[1]] == board[condition[2]] != ' ':
+            return board[condition[0]]
+    if ' ' not in board:
+        return 'Tie'
+    return False
 
-            if (userChoice === computerChoice) {
-                resultDiv.innerText = `It's a tie! Both chose ${userChoice}.`;
-                resultDiv.style.color = '#666';
-            } else if ((userChoice === 'rock' && computerChoice === 'scissors') ||
-                       (userChoice === 'paper' && computerChoice === 'rock') ||
-                       (userChoice === 'scissors' && computerChoice === 'paper')) {
-                resultDiv.innerText = `You win! ${userChoice} beats ${computerChoice}.`;
-                resultDiv.style.color = '#2ecc71';
-            } else {
-                resultDiv.innerText = `You lose! ${computerChoice} beats ${userChoice}.`;
-                resultDiv.style.color = '#e74c3c';
-            }
-        }
-    </script>
-    <style>
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-</body>
-</html>
+def game():
+    current_player = 'X'
+    while True:
+        print_board()
+        move = input("Player {}, enter your move (1-9): ".format(current_player))
+        if board[int(move) - 1] == ' ':
+            board[int(move) - 1] = current_player
+            result = check_win()
+            if result:
+                print_board()
+                if result == 'Tie':
+                    print("It's a tie!")
+                else:
+                    print("Player {} wins! Congratulations!".format(result))
+                break
+            current_player = 'O' if current_player == 'X' else 'X'
+        else:
+            print("Invalid move, try again.")
+
+if __name__ == '__main__':
+    game()
